@@ -1,16 +1,44 @@
 from typing import List
 
-from gym_uttt.game.engine.tic_tac_toe_grid import TicTacToeGrid
+import numpy as np
+from gym.error import InvalidAction
+
 from gym_uttt.game.engine.action import Action
+from gym_uttt.game.engine.tic_tac_toe_grid import TicTacToeGrid
 
 
 class TicTacToeGame:
     master_grid: TicTacToeGrid
     small_grids: List[List[TicTacToeGrid]]
     last_action: Action
+    current_player: int = 1
+    valid_actions: List[Action]
 
     def __init__(self):
         pass
+
+    def turn(self, action: Action) -> (bool, bool, bool):
+        if action not in self.valid_actions:
+            raise InvalidAction("Invalid move!")
+        action.player = self.current_player
+        self.last_action = action
+        self.current_player = - self.current_player
+        grid = self.small_grids[action.row // 3][action.col // 3]
+        grid_winner = False
+        game_winner = False
+        done = False
+        if grid.play(Action(action.row % 3, action.col % 3, action.player)) > 0:
+            grid_winner = True
+            if self.master_grid.play(Action(action.row // 3, action.col // 3, action.player)) > 0:
+                game_winner = True
+                done = True
+        self.valid_actions = self.get_valid_actions()
+        if not self.valid_actions:
+            done = True
+        return grid_winner, game_winner, done
+
+    def get_state(self) -> np.array:
+        raise NotImplementedError
 
     def get_valid_actions(self) -> List[Action]:
         valid_actions = []

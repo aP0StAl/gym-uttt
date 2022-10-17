@@ -28,7 +28,6 @@ class TicTacToeGrid:
         # update grid
         self.grid[action.row][action.col] = action.player
         winner = self.check_winner()
-        self.draw_play(action)
         return winner
 
     def check_winner(self) -> int:
@@ -49,13 +48,3 @@ class TicTacToeGrid:
             return grid[2, 0]
 
         return 0
-
-    def draw(self, **kwargs):
-        pass
-
-    def draw_play(self, action: Action):
-        pass
-
-    @staticmethod
-    def convert(orig: int, cell_size: int, unit: float) -> int:
-        return int(orig + unit * cell_size)
