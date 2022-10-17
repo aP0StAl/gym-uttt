@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 from gym.error import InvalidAction
 
-from action import Action
+from gym_uttt.game.engine.action import Action
 
 
 class TicTacToeGrid:
