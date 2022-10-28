@@ -7,9 +7,6 @@ from gym_uttt.game.engine.action import Action
 
 
 class TicTacToeGrid:
-    orig_x: int
-    orig_y: int
-    cell_size: int
     grid: np.array = np.zeros((3, 3))
     winner: int = 0
 
