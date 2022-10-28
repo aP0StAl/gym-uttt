@@ -29,7 +29,6 @@ class Uttt(gym.Env):
 
     def step(self, action: ActType) -> Tuple[ObsType, float, bool, bool, dict]:
         grid_winner, game_winner, done = self.game.turn(Action(action[0], action[1], None))
-        game_state = self.game.get_state()
         reward = 0
         if grid_winner:
             reward = 1
@@ -37,7 +36,8 @@ class Uttt(gym.Env):
             reward = 3
         if game_winner:
             reward = 10
-
+        game_state = self.game.get_state()
+        return game_state, reward, done, False, {}
 
     def render(self) -> Optional[Union[RenderFrame, List[RenderFrame]]]:
         pass
