@@ -39,5 +39,15 @@ class Uttt(gym.Env):
         game_state = self.game.get_state()
         return game_state, reward, done, False, {}
 
+    def reset(
+        self,
+        *,
+        seed: Optional[int] = None,
+        options: Optional[dict] = None,
+    ) -> Tuple[ObsType, dict]:
+        self.game = TicTacToeGame()
+        game_state = self.game.get_state()
+        return game_state, {}
+
     def render(self) -> Optional[Union[RenderFrame, List[RenderFrame]]]:
         pass
