@@ -46,7 +46,7 @@ class TicTacToeGame:
         for i in range(3):
             for j in range(3):
                 state[3*i:3*(i+1), 3*j:3*(j+1)] = self.small_grids[i][j]
-        return state
+        return state.reshape(-1)
 
     def get_valid_actions(self) -> List[Action]:
         valid_actions = []

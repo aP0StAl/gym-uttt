@@ -1,6 +1,7 @@
 from typing import Optional, Union, List, Tuple
 
 import gym
+import numpy as np
 from gym.core import RenderFrame, ActType, ObsType
 
 from gym_uttt.game.engine.action import Action
@@ -26,6 +27,8 @@ class Uttt(gym.Env):
 
     def __init__(self):
         self.game = TicTacToeGame()
+        self.action_space = gym.spaces.Box(0, 8, shape=(2,), dtype=np.uint8)
+        self.observation_space = gym.spaces.Box(-1, 1, shape=(81,), dtype=np.int8)
 
     def step(self, action: ActType) -> Tuple[ObsType, float, bool, bool, dict]:
         grid_winner, game_winner, done = self.game.turn(Action(action[0], action[1], None))
