@@ -24,11 +24,14 @@ class Uttt(gym.Env):
         3 for draw
         1 for winner on small board
     """
+    metadata = {'render_modes': ['rgb_array'], 'render_fps': 1}
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.game = TicTacToeGame()
         self.action_space = gym.spaces.Box(0, 8, shape=(2,), dtype=np.uint8)
         self.observation_space = gym.spaces.Box(-1, 1, shape=(81,), dtype=np.int8)
+        self.viewer = None
+        self.render_mode = kwargs.get('render_mode')
 
     def step(self, action: ActType) -> Tuple[ObsType, float, bool, bool, dict]:
         grid_winner, game_winner, done = self.game.turn(Action(action[0], action[1], None))
@@ -42,12 +45,7 @@ class Uttt(gym.Env):
         game_state = self.game.get_state()
         return game_state, reward, done, False, {"valid_actions": self.get_valid_actions()}
 
-    def reset(
-        self,
-        *,
-        seed: Optional[int] = None,
-        options: Optional[dict] = None,
-    ) -> Tuple[ObsType, dict]:
+    def reset(self, *, seed: Optional[int] = None, options: Optional[dict] = None) -> Tuple[ObsType, dict]:
         self.game = TicTacToeGame()
         game_state = self.game.get_state()
         return game_state, {"valid_actions": self.get_valid_actions()}
@@ -56,4 +54,6 @@ class Uttt(gym.Env):
         return [(x.row, x.col) for x in self.game.valid_actions]
 
     def render(self) -> Optional[Union[RenderFrame, List[RenderFrame]]]:
-        pass
+        img = np.asarray(self.game.draw())
+        if self.render_mode == 'rgb_array':
+            return img

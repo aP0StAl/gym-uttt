@@ -1,9 +1,28 @@
+import os
+from pathlib import Path
 from typing import List
 
 import numpy as np
+from PIL import Image
 from gym.error import InvalidAction
 
 from gym_uttt.game.engine.action import Action
+
+p = Path(__file__).parents[2]
+cross = Image.open(os.path.join(p, 'assets/cross.png'))
+cross = Image.composite(Image.new('RGBA', cross.size, color='#f1b213'), cross, cross)
+circle = Image.open(os.path.join(p, 'assets/circle.png'))
+circle = Image.composite(Image.new('RGBA', circle.size, color='#22a1e4'), circle, circle)
+small_board = Image.open(os.path.join(p, 'assets/small_board.png'))
+small_board.thumbnail((100, 100))
+cross_small = cross.copy()
+cross_small.thumbnail((24, 24))
+circle_small = circle.copy()
+circle_small.thumbnail((24, 24))
+cross_big = cross.copy()
+cross_big.thumbnail((100, 100))
+circle_big = circle.copy()
+circle_big.thumbnail((100, 100))
 
 
 class TicTacToeGrid:
@@ -29,8 +48,8 @@ class TicTacToeGrid:
 
         # update grid
         self.grid[action.row][action.col] = action.player
-        winner = self.check_winner()
-        return winner
+        self.winner = self.check_winner()
+        return self.winner
 
     def check_winner(self) -> int:
         grid = self.grid
@@ -50,3 +69,26 @@ class TicTacToeGrid:
             return grid[2, 0]
 
         return 0
+
+    def draw(self, shadow=False):
+        a = self.grid
+        winner = self.winner
+        if winner == -1:
+            return circle_big.copy()
+        if winner == 1:
+            return cross_big.copy()
+        sb = small_board.copy()
+        for i in range(3):
+            for j in range(3):
+                fig = None
+                if a[i, j] == 1:
+                    fig = cross_small
+                if a[i, j] == -1:
+                    fig = circle_small
+                if fig is not None:
+                    sb.paste(fig, (3 + 35 * j, 3 + 35 * i), fig)
+        if shadow:
+            alpha = sb.getchannel('A')
+            new_alpha = alpha.point(lambda x: int(x * 187 / 255) if x > 0 else 0)
+            sb.putalpha(new_alpha)
+        return sb

@@ -21,7 +21,8 @@ setup(
     author_email='sporyadnyi@gmail.com',
     license='MIT License',
     install_requires=[
-        'gym==0.26.2'
+        'gym==0.26.2',
+        'Pillow'
     ],
     extras_require=extras,
     tests_require=extras['test'],
