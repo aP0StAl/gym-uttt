@@ -40,7 +40,7 @@ class Uttt(gym.Env):
         if game_winner:
             reward = 10
         game_state = self.game.get_state()
-        return game_state, reward, done, False, {}
+        return game_state, reward, done, False, {"valid_actions": self.get_valid_actions()}
 
     def reset(
         self,
@@ -50,7 +50,10 @@ class Uttt(gym.Env):
     ) -> Tuple[ObsType, dict]:
         self.game = TicTacToeGame()
         game_state = self.game.get_state()
-        return game_state, {}
+        return game_state, {"valid_actions": self.get_valid_actions()}
+
+    def get_valid_actions(self):
+        return [(x.row, x.col) for x in self.game.valid_actions]
 
     def render(self) -> Optional[Union[RenderFrame, List[RenderFrame]]]:
         pass

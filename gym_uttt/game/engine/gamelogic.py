@@ -42,10 +42,10 @@ class TicTacToeGame:
         return grid_winner, game_winner, done
 
     def get_state(self) -> np.array:
-        state = np.array((9, 9))
+        state = np.zeros((9, 9), dtype='int8')
         for i in range(3):
             for j in range(3):
-                state[3*i:3*(i+1), 3*j:3*(j+1)] = self.small_grids[i][j]
+                state[3*i:3*(i+1), 3*j:3*(j+1)] = self.small_grids[i][j].grid
         return state.reshape(-1)
 
     def get_valid_actions(self) -> List[Action]:
