@@ -17,7 +17,7 @@ class Uttt(gym.Env):
         Type: Box(9, 9)
 
     Actions:
-        Type: Box(2)
+        Type: Discrete(81)
 
     Reward:
         10 for final winner
@@ -28,13 +28,15 @@ class Uttt(gym.Env):
 
     def __init__(self, **kwargs):
         self.game = TicTacToeGame()
-        self.action_space = gym.spaces.Box(0, 8, shape=(2,), dtype=np.uint8)
+        self.action_space = gym.spaces.Discrete(81)
         self.observation_space = gym.spaces.Box(-1, 1, shape=(81,), dtype=np.int8)
         self.viewer = None
         self.render_mode = kwargs.get('render_mode')
 
     def step(self, action: ActType) -> Tuple[ObsType, float, bool, bool, dict]:
-        grid_winner, game_winner, done = self.game.turn(Action(action[0], action[1], None))
+        action_row = action // 9
+        action_col = action % 9
+        grid_winner, game_winner, done = self.game.turn(Action(action_row, action_col, None))
         reward = 0
         if grid_winner:
             reward = 1
@@ -51,7 +53,7 @@ class Uttt(gym.Env):
         return game_state, {"valid_actions": self.get_valid_actions()}
 
     def get_valid_actions(self):
-        return [(x.row, x.col) for x in self.game.valid_actions]
+        return [9 * x.row + x.col for x in self.game.valid_actions]
 
     def render(self) -> Optional[Union[RenderFrame, List[RenderFrame]]]:
         img = np.asarray(self.game.draw())
