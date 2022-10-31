@@ -21,7 +21,6 @@ class Uttt(gym.Env):
 
     Reward:
         10 for final winner
-        3 for draw
         1 for winner on small board
     """
     metadata = {'render_modes': ['rgb_array'], 'render_fps': 1}
@@ -40,20 +39,25 @@ class Uttt(gym.Env):
         reward = 0
         if grid_winner:
             reward = 1
-        if done:
-            reward = 3
         if game_winner:
             reward = 10
         game_state = self.game.get_state()
-        return game_state, reward, done, False, {"valid_actions": self.get_valid_actions()}
+        return game_state, reward, done, False, self.get_info()
 
     def reset(self, *, seed: Optional[int] = None, options: Optional[dict] = None) -> Tuple[ObsType, dict]:
         self.game = TicTacToeGame()
         game_state = self.game.get_state()
-        return game_state, {"valid_actions": self.get_valid_actions()}
+        return game_state, self.get_info()
 
     def get_valid_actions(self):
         return [9 * x.row + x.col for x in self.game.valid_actions]
+
+    def get_info(self):
+        return {
+            "valid_actions": self.get_valid_actions(),
+            "player": self.game.current_player,
+            "winner": self.game.master_grid.winner
+        }
 
     def render(self) -> Optional[Union[RenderFrame, List[RenderFrame]]]:
         img = np.asarray(self.game.draw())
