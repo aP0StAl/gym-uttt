@@ -24,7 +24,7 @@ setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'gym==0.26.2',
-        'Pillow'
+        'Pillow==9.3.0'
     ],
     include_package_data=True,
     extras_require=extras,
