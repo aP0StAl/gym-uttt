@@ -1,5 +1,6 @@
 from os import path
 
+import setuptools
 from setuptools import setup
 
 extras = {
@@ -20,6 +21,7 @@ setup(
     author='Stanislav Poryadnyi',
     author_email='sporyadnyi@gmail.com',
     license='MIT License',
+    packages=setuptools.find_packages(),
     install_requires=[
         'gym==0.26.2',
         'Pillow'
