@@ -26,6 +26,7 @@ setup(
         'gym==0.26.2',
         'Pillow'
     ],
+    include_package_data=True,
     extras_require=extras,
     tests_require=extras['test'],
     python_requires='>=3.7,<3.8',
