@@ -62,7 +62,7 @@ class TicTacToeGame:
         if grid.play(Action(action.row % 3, action.col % 3, action.player)) != 0:
             grid_winner = True
             if self.master_grid.play(Action(action.row // 3, action.col // 3, action.player)) != 0:
-                game_winner = True
+                game_winner = self.master_grid.winner
                 done = True
         self.valid_actions = self.get_valid_actions()
         if not self.valid_actions:
@@ -73,7 +73,11 @@ class TicTacToeGame:
         state = np.zeros((9, 9), dtype='int8')
         for i in range(3):
             for j in range(3):
-                state[3*i:3*(i+1), 3*j:3*(j+1)] = self.small_grids[i][j].grid
+                g = self.small_grids[i][j]
+                if g.winner:
+                    state[3 * i:3 * (i + 1), 3 * j:3 * (j + 1)] = np.ones((3, 3)) * g.winner
+                else:
+                    state[3 * i:3 * (i + 1), 3 * j:3 * (j + 1)] = g.grid
         return state.reshape(-1)
 
     def get_valid_actions(self) -> List[Action]:
